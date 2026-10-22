@@ -44,6 +44,7 @@ export default function Navbar({
         <button
           className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-brand px-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-hover focus-visible:outline-brand sm:px-4"
           type="button"
+          aria-label="Create task"
           onClick={onCreateTask}
         >
           <Plus className="size-4" aria-hidden="true" />

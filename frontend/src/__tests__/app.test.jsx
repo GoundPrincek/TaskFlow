@@ -71,7 +71,9 @@ describe("TaskFlow application", () => {
 
   it("shows inline validation and does not submit a blank title", async () => {
     const user = userEvent.setup();
-    const { service } = renderApp();
+    const service = createMockTaskService();
+    const createTask = vi.spyOn(service, "createTask");
+    renderApp({ service });
     await screen.findByRole("heading", { name: /Good work starts/ });
     await user.click(getCreateButton());
     const dialog = screen.getByRole("dialog", { name: "Create a task" });
@@ -80,7 +82,7 @@ describe("TaskFlow application", () => {
     );
 
     expect(within(dialog).getByText("Enter a task title.")).toBeInTheDocument();
-    expect(service.createTask).not.toHaveBeenCalled();
+    expect(createTask).not.toHaveBeenCalled();
   });
 
   it("edits a task and refreshes its status in the list", async () => {
@@ -107,7 +109,11 @@ describe("TaskFlow application", () => {
     expect(
       await screen.findByText("Prepare the revised product brief"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Completed")).toBeInTheDocument();
+    expect(
+      screen
+        .getByText("Prepare the revised product brief")
+        .closest("article"),
+    ).toHaveTextContent("Completed");
     expect(screen.getByText("Task updated successfully.")).toBeInTheDocument();
   });
 
@@ -165,7 +171,9 @@ describe("TaskFlow application", () => {
     expect(screen.getByText("Finish competitor research")).toBeInTheDocument();
     expect(screen.queryByText("Review design feedback")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Clear filters" }));
+    await user.click(
+      screen.getByRole("button", { name: "Clear filters" }),
+    );
     expect(screen.getByText("Review design feedback")).toBeInTheDocument();
   });
 
@@ -182,7 +190,10 @@ describe("TaskFlow application", () => {
     expect(
       await screen.findByRole("heading", { name: "No tasks match these filters" }),
     ).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Clear filters" }));
+    const clearButtons = screen.getAllByRole("button", {
+      name: "Clear filters",
+    });
+    await user.click(clearButtons[clearButtons.length - 1]);
     expect(screen.getByText("Review design feedback")).toBeInTheDocument();
   });
 
@@ -244,16 +255,26 @@ describe("TaskFlow application", () => {
     expect(await screen.findByText("Finish competitor research")).toBeInTheDocument();
   });
 
-  it("shows accessible names for navigation, search, and form fields", async () => {
+  it("provides accessible names for navigation, search, and form fields", async () => {
+    const user = userEvent.setup();
     renderApp();
     await screen.findByRole("heading", { name: /Good work starts/ });
     expect(screen.getByRole("navigation", { name: "Primary navigation" })).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Dashboard" }),
     ).toHaveAttribute("aria-current", "page");
+    await openTasks(user);
     expect(
-      screen.getByRole("button", { name: /Create task/ }),
+      screen.getByRole("searchbox", { name: "Search tasks by title" }),
     ).toBeInTheDocument();
+    const createButtons = screen.getAllByRole("button", {
+      name: "Create task",
+    });
+    expect(createButtons.length).toBeGreaterThan(0);
+    await user.click(createButtons[0]);
+    expect(
+      screen.getByRole("textbox", { name: /Title/ }),
+    ).toHaveAttribute("aria-required", "true");
   });
 
   it("renders a not-found page with a dashboard link", async () => {
