@@ -86,7 +86,7 @@ export default function TaskCard({
                 }
               >
                 <CalendarDays className="size-3.5" aria-hidden="true" />
-                <span>{overdue ? "Due " + dueDate : "Due " + dueDate}</span>
+                <span>Due {dueDate}</span>
               </span>
             )}
           </div>

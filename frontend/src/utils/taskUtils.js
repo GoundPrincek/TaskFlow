@@ -109,9 +109,9 @@ export function filterTasks(tasks, filters) {
 }
 
 export function getUpcomingTasks(tasks, limit = 4) {
-  return tasks
+  return [...tasks]
     .filter((task) => task.status !== "completed")
-    .toSorted((first, second) => {
+    .sort((first, second) => {
       const firstDue = toDateOnly(first.dueDate);
       const secondDue = toDateOnly(second.dueDate);
 

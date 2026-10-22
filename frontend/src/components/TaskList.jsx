@@ -1,4 +1,4 @@
-import { CheckCircle2, ClipboardList, Plus } from "lucide-react";
+import { ClipboardList, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 
 export default function TaskList({
@@ -29,9 +29,6 @@ export default function TaskList({
           <Plus className="size-4" aria-hidden="true" />
           Create task
         </button>
-        <p className="sr-only">
-          <CheckCircle2 aria-hidden="true" />
-        </p>
       </section>
     );
   }

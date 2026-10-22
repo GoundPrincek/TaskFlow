@@ -1,4 +1,5 @@
 import {
+  createElement,
   createContext,
   useCallback,
   useContext,
@@ -156,9 +157,7 @@ export function TasksProvider({
     [state, mode, refresh, createTask, updateTask, deleteTask],
   );
 
-  return (
-    <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
-  );
+  return createElement(TasksContext.Provider, { value }, children);
 }
 
 export function useTasks() {

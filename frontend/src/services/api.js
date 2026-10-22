@@ -69,6 +69,10 @@ export const apiService = {
     return data;
   },
 
+  getTask(id) {
+    return request("/tasks/" + encodeURIComponent(id));
+  },
+
   createTask(task) {
     return request("/tasks", {
       method: "POST",
