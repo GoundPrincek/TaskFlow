@@ -1,5 +1,4 @@
 # Project Overview
- TODO: Prepare the complete Project Overview before implementation.
 # TaskFlow — Smart Task Management System
 
 **Document:** Project Overview  

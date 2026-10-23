@@ -1,6 +1,5 @@
 # Test Plan
 
-TODO: Prepare the complete test plan before implementation.
 
 # TaskFlow — Test Plan
 
@@ -478,4 +477,8 @@ This test plan establishes a repeatable approach to verifying TaskFlow from indi
 Testing will proceed alongside implementation, with particular attention to input validation, data persistence, cache invalidation, failure recovery, and multi-instance behavior.
 
 The project is ready for final verification when the agreed acceptance criteria are satisfied and the test results are documented.
+
+### Current automated coverage (2026-10-23)
+
+Backend tests use Node's built-in test runner and Supertest with injected task services, so route validation and response behavior do not require a live database. Frontend component, utility, and API-client tests run with Vitest. Compose startup, persistent database behavior, responsive browser layout, Redis caching, and Nginx behavior remain separate verification work and must not be marked complete without running those checks.
 

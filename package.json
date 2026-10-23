@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "nodejs": "^0.0.0"
+  "name": "taskflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TaskFlow full-stack task management application",
+  "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "test": "npm --prefix backend test && npm --prefix frontend test",
+    "build": "npm --prefix frontend run build",
+    "compose:up": "docker compose up --build",
+    "compose:down": "docker compose down"
   }
 }

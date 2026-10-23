@@ -1,6 +1,5 @@
 # UI/UX Design
 
-TODO: Prepare the complete UI/UX design document before implementation.
 
 # TaskFlow — UI/UX Design
 

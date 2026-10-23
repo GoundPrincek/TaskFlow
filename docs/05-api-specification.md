@@ -1,6 +1,5 @@
 # API Specification
 
-TODO: Prepare the complete API specification before implementation.
 # TaskFlow — API Specification
 
 ## 1. Overview
@@ -91,7 +90,7 @@ Example response:
 }
 ```
 
-The implementation must distinguish between process liveness and dependency readiness.
+The implementation distinguishes process liveness and dependency readiness using `/api/health/live` and `/api/health/ready`. `/api/health` reports readiness for compatibility.
 
 - **Liveness:** The API process is running.
 - **Readiness:** The API can serve requests according to its required dependencies.
@@ -124,7 +123,7 @@ Only supported task fields should be accepted. The backend assigns the task ID a
 - `description` is optional and cannot exceed 2,000 characters.
 - `status` must be `todo`, `in-progress`, or `completed`.
 - `priority` must be `low`, `medium`, or `high`.
-- `dueDate` is optional and must be a valid date if supplied.
+- `dueDate` is optional and must be a valid `YYYY-MM-DD` date, an ISO timestamp, or `null`. The backend stores its UTC calendar day at midnight UTC.
 
 ### Success response
 
@@ -173,7 +172,7 @@ Example:
 GET /api/tasks?status=todo&priority=high
 ```
 
-The backend must validate query parameters and reject unsupported status or priority values. Pagination and sorting must be explicitly implemented before the frontend relies on them.
+The backend validates query parameters and rejects unsupported status or priority values. The first release supports only `status`, `priority`, and `search`; pagination and sorting parameters are rejected until explicitly implemented.
 
 ### Success response
 
@@ -360,7 +359,7 @@ The values are illustrative.
 - `todoTasks`: tasks with status `todo`.
 - `inProgressTasks`: tasks with status `in-progress`.
 - `completedTasks`: tasks with status `completed`.
-- `overdueTasks`: tasks whose due date is earlier than the current time and whose status is not `completed`.
+- `overdueTasks`: tasks whose UTC calendar due-date day is earlier than the current UTC day and whose status is not `completed`.
 - `completionPercentage`: completed tasks divided by total tasks, multiplied by 100.
 
 When `totalTasks` is zero, `completionPercentage` must be zero.
@@ -484,4 +483,12 @@ The following implementation order is recommended:
 
 This API specification defines the proposed communication contract between the TaskFlow frontend and backend.
 
-Before implementation, finalize the authentication model, pagination behavior, deletion policy, and Redis fallback policy. Keep the code, automated tests, and frontend expectations aligned with the final contract.
+### First-release contract decisions (2026-10-23)
+
+- Single-user operation with no authentication or ownership field.
+- Permanent deletion.
+- No pagination; list results are arrays and the UI applies local search/filtering.
+- Redis is optional and does not participate in task operations or readiness. MongoDB is the source of truth; no response caching is active.
+- Due dates use UTC calendar-day semantics as described above.
+
+Keep the implementation, automated tests, and frontend expectations aligned with these decisions. Revisit them before adding multi-user access, larger collections, caching, or a public deployment.

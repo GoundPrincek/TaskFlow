@@ -13,10 +13,14 @@ export function getLocalDateString(date = new Date()) {
   return year + "-" + month + "-" + day;
 }
 
+export function getUtcDateString(date = new Date()) {
+  return date.toISOString().slice(0, 10);
+}
+
 export function isTaskOverdue(task, now = new Date()) {
   if (task.status === "completed" || !task.dueDate) return false;
   const dueDate = toDateOnly(task.dueDate);
-  return isValidDateOnly(dueDate) && dueDate < getLocalDateString(now);
+  return isValidDateOnly(dueDate) && dueDate < getUtcDateString(now);
 }
 
 export function isValidDateOnly(value) {

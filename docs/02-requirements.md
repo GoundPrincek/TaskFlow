@@ -1,5 +1,4 @@
 # Requirements
- TODO: Prepare the complete Requirements before implementation.
 # TaskFlow — Software Requirements Specification (SRS)
 
 **Document:** Requirements Specification  
@@ -215,7 +214,7 @@ The system shall support three priority levels:
 
 The system shall allow users to assign an optional due date to a task.
 
-The system shall identify overdue tasks when their due date is before the current date and the task is not completed.
+The system shall identify overdue tasks when their due-date UTC calendar day is before the current UTC day and the task is not completed.
 
 **Acceptance criteria:**
 - A task can be saved without a due date.
@@ -703,7 +702,16 @@ This specification defines the expected functionality, quality attributes, busin
 
 The initial implementation will focus on reliable task management, persistent storage, search, filtering, deadlines, and productivity statistics.
 
-After the core application is tested, the project will introduce caching, containerization, load balancing, and continuous integration in controlled stages.
+The first-release API, Docker Compose development environment, and CI checks are now implemented. Redis response caching and Nginx load balancing remain deferred until measurements and a deployment target justify them.
 
 This document will serve as the baseline for system architecture, database design, API specification, implementation planning, and testing. Any significant change in scope should be reflected in the relevant documentation before implementation proceeds.
+
+### Current first-release decisions (2026-10-23)
+
+- The application is single-user and has no authentication or ownership field.
+- Task deletion is permanent.
+- Pagination is disabled. The API supports title search, status, and priority filters; unsupported pagination parameters return a validation error.
+- Redis is optional for request handling. MongoDB is the source of truth, and there is no response caching in this release.
+- Due dates are calendar dates. The API stores date-only values at UTC midnight and treats a task as overdue when its due-date day is before the current UTC day and the task is not completed.
+- Redis container health and API dependency status are reported, but Redis availability does not determine API readiness.
 

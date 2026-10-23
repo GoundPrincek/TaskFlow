@@ -1,5 +1,4 @@
 # System Architecture
- TODO: Prepare the complete System Architecture before implementation.
 # TaskFlow — System Architecture Document
 
 **Document:** System Architecture  
@@ -732,9 +731,16 @@ The architecture should be implemented in the following order:
 
 TaskFlow will use a modular client-server architecture designed to keep presentation, business logic, persistence, caching, and infrastructure responsibilities separate.
 
-React and Tailwind CSS will provide the user interface. Express and Node.js will expose the REST API. MongoDB will store persistent task records, while Redis will cache selected results. Docker and Docker Compose will provide a reproducible service environment. Nginx will distribute incoming requests across backend instances, and GitHub Actions will automate testing and build checks.
+React and Tailwind CSS provide the user interface. Express and Node.js expose the REST API. MongoDB stores persistent task records. Docker Compose provides the local development environment, and GitHub Actions runs tests and the frontend build. Redis is present as an optional service but is not used for response caching. Nginx and multi-instance load balancing remain future deployment work.
 
 The system will be developed incrementally, with each architectural layer verified before the next is introduced.
+
+### Current implementation notes (2026-10-23)
+
+- The browser calls the same-origin `/api` path. Vite proxies it to the backend during local development; the proxy target is server-side and is not exposed to browser code.
+- Compose starts one backend instance with MongoDB and Redis on a private Compose network. Only the frontend and API ports are published to the host.
+- MongoDB is required for readiness. Redis is optional and health-reported; no task or statistics cache is active.
+- The application has no authentication and is suitable only for a trusted, single-user development environment until access control is designed.
 
 **Document Status:** Proposed architecture. Final decisions and implementation details must be verified during development.
 

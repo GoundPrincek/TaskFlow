@@ -1,5 +1,4 @@
 # Database Design
-TODO: Prepare the complete  Database Design before implementation.
 # TaskFlow — Database Design
 
 ## 1. Overview
@@ -210,7 +209,7 @@ Proposed calculations:
 - Total tasks = count of all tasks in the applicable scope.
 - Completed tasks = count where `status` is `completed`.
 - Completion percentage = completed tasks divided by total tasks, multiplied by 100.
-- Overdue tasks = tasks with a due date earlier than the current time whose status is not `completed`.
+- Overdue tasks = tasks with a due-date UTC calendar day earlier than the current UTC day whose status is not `completed`.
 
 When there are no tasks, completion percentage should be `0`, not `NaN` or an error.
 
@@ -315,20 +314,22 @@ Potential future enhancements include:
 
 These enhancements should be introduced only when the requirements justify their complexity.
 
-## 15. Design Decisions to Finalize
+## 15. Initial Design Decisions
 
-Before implementation, confirm:
+The first release uses these decisions:
 
-1. **Authentication:** single-user or multi-user with registration and login?
-2. **Pagination:** required in the first release or deferred?
-3. **Task deletion:** permanent deletion or soft deletion?
-4. **Redis behavior:** continue serving requests from MongoDB if Redis is unavailable?
-5. **Search:** simple title search initially or advanced search requirements?
-6. **Deployment:** local development first, followed by Docker and Nginx?
+1. **Authentication:** single-user with no authentication or ownership field.
+2. **Pagination:** deferred; the initial API returns the filtered task array.
+3. **Task deletion:** permanent deletion.
+4. **Redis behavior:** optional; MongoDB remains authoritative and handles all task reads/writes.
+5. **Search:** case-insensitive title search, with status and priority filters.
+6. **Deployment:** local development uses Docker Compose; Nginx and production deployment are deferred.
+
+Due dates are calendar dates. The API accepts `YYYY-MM-DD` or an ISO timestamp, interprets the timestamp's UTC calendar day, and stores that day at UTC midnight. Overdue calculations compare the stored value with the start of the current UTC day and exclude completed tasks.
 
 ## 16. Conclusion
 
 This design provides a straightforward MongoDB model for TaskFlow while preparing the application for Redis caching and horizontally scaled backend instances.
 
-The implementation should begin only after the ownership model and remaining design decisions are confirmed. Database schema, authorization rules, cache keys, indexes, and tests must remain consistent with those decisions.
+Database schema and tests follow these first-release decisions. The cache-key helper is reserved for a later caching phase; no cached data is currently served.
 
