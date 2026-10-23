@@ -8,14 +8,15 @@ export default function Navbar({
   onToggleNavigation,
 }) {
   return (
-    <header className="sticky top-0 z-40 flex h-[72px] items-center justify-between border-b border-line bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 flex h-[72px] items-center justify-between border-b border-line bg-white/95 px-3 backdrop-blur sm:px-6 lg:px-8">
       <div className="flex min-w-0 items-center gap-3">
         <button
           className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100 hover:text-ink lg:hidden"
           type="button"
           aria-label={isNavigationOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isNavigationOpen}
-          aria-controls="primary-navigation"
+          aria-controls="mobile-navigation"
+          id="navigation-toggle"
           onClick={onToggleNavigation}
         >
           {isNavigationOpen ? (
@@ -33,8 +34,9 @@ export default function Navbar({
           </span>
         </Link>
         {isMockMode && (
-          <span className="hidden items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-900 sm:inline-flex">
-            Sample data
+          <span className="inline-flex shrink-0 items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[10px] font-semibold text-amber-900 sm:px-2.5 sm:text-[11px]">
+            <span className="sm:hidden">Demo</span>
+            <span className="hidden sm:inline">Sample data</span>
           </span>
         )}
       </div>
