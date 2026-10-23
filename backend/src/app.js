@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const os = require("node:os");
 const Task = require("./models/Task");
 const { createTaskService } = require("./services/taskService");
 const { createTaskRoutes } = require("./routes/taskRoutes");
@@ -20,6 +21,12 @@ function allowedOrigins() {
 function createApp({ taskService = createTaskService({ TaskModel: Task }), healthProvider } = {}) {
   const app = express();
   app.disable("x-powered-by");
+  if (process.env.TASKFLOW_INSTANCE_HEADER === "true") {
+    app.use((_req, res, next) => {
+      res.set("X-TaskFlow-Instance", os.hostname());
+      next();
+    });
+  }
   app.use(helmet());
   app.use(cors({
     origin(origin, callback) {

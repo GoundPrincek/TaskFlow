@@ -11,6 +11,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Validate Docker Compose configuration
+        run: |
+          docker compose config --quiet
+          docker compose -f docker-compose.yml -f docker-compose.scaling.yml config --quiet
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:

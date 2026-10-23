@@ -702,7 +702,7 @@ This specification defines the expected functionality, quality attributes, busin
 
 The initial implementation will focus on reliable task management, persistent storage, search, filtering, deadlines, and productivity statistics.
 
-The first-release API, Docker Compose development environment, and CI checks are now implemented. Redis response caching and Nginx load balancing remain deferred until measurements and a deployment target justify them.
+The first-release API, Docker Compose development environment, and CI checks are implemented. Redis response caching remains deferred. An optional isolated Compose override and Nginx configuration are available for local scaling experiments; request distribution still requires runtime verification.
 
 This document will serve as the baseline for system architecture, database design, API specification, implementation planning, and testing. Any significant change in scope should be reflected in the relevant documentation before implementation proceeds.
 

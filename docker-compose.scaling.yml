@@ -1,0 +1,22 @@
+services:
+  backend:
+    ports: !reset []
+    environment:
+      TASKFLOW_INSTANCE_HEADER: "true"
+      RATE_LIMIT_MAX: ${TASKFLOW_SCALE_RATE_LIMIT_MAX:-100}
+
+  load-balancer:
+    image: nginx:1.30.6-alpine
+    ports:
+      - "127.0.0.1:${TASKFLOW_SCALE_PORT:-8081}:8080"
+    volumes:
+      - ./nginx/scaling.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/api/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

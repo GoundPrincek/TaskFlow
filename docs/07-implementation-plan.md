@@ -496,8 +496,8 @@ Infrastructure milestones require additional verification of startup, networking
 
 ## 21. Conclusion
 
-TaskFlow is delivered in incremental phases. The core task application, Compose development environment, and GitHub Actions checks are implemented. Redis response caching and Nginx load balancing remain planned work that should follow performance measurements and selection of a deployment target.
+TaskFlow is delivered in incremental phases. The core task application, Compose development environment, and GitHub Actions checks are implemented. Redis response caching remains planned work. An optional local Nginx scaling configuration is available for experiments; production deployment and verified multi-instance behavior remain future work.
 
 This approach reduces debugging complexity, improves maintainability, and produces a stronger portfolio project with demonstrable engineering practices.
 
-**Current status (2026-10-23):** Mongo-backed CRUD API, frontend API integration, local Compose services, backend/frontend automated checks, and a CI workflow are in place. Redis is started and health-reported but does not cache data. Nginx is not wired into Compose. Production deployment and multi-instance behavior are not verified.
+**Current status (2026-10-23):** Mongo-backed CRUD API, frontend API integration, local Compose services, backend/frontend automated checks, and a CI workflow are in place. Redis is started and health-reported but does not cache data. The default Compose project still uses one backend; an optional Compose override wires Nginx to scaled backends, but multi-instance behavior and production deployment are not verified.

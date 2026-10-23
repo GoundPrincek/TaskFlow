@@ -66,10 +66,12 @@ npm run build
 
 Check Compose configuration without starting containers using `docker compose config`.
 
+Read-only performance testing with Grafana k6 and isolated horizontal-scaling instructions are documented in [Performance Testing](docs/performance-testing.md) and [Horizontal Scaling](docs/horizontal-scaling.md). The optional scaling project uses its own Compose project name and MongoDB volume; it does not change the default development stack.
+
 ## Implemented and deferred
 
 - Implemented: responsive React UI, mock and API modes, task CRUD, validation, title search and filters, dashboard statistics, MongoDB persistence, backend health/readiness, Compose development services, persistent MongoDB volume, and GitHub Actions checks.
 - Redis is included as an optional service and reported in health output; Redis caching and invalidation are deferred.
-- Nginx is not in the Compose stack. Multi-instance load balancing, production container images/deployment, authentication, pagination, and end-to-end browser testing remain future work.
+- The default Compose stack uses Vite as its proxy and one backend. An optional isolated Nginx scaling project is documented for local experiments; multi-instance behavior has not yet been verified in this environment. Production deployment, authentication, pagination, and end-to-end browser testing remain future work.
 
 The eight design documents in `docs/` describe the requirements, architecture, data model, API, UI, implementation plan, and test plan.
