@@ -66,7 +66,33 @@ npm run build
 
 Check Compose configuration without starting containers using `docker compose config`.
 
-Read-only performance testing with Grafana k6 and isolated horizontal-scaling instructions are documented in [Performance Testing](docs/performance-testing.md) and [Horizontal Scaling](docs/horizontal-scaling.md). The optional scaling project uses its own Compose project name and MongoDB volume; it does not change the default development stack.
+## Performance and horizontal scaling
+
+The default stack runs one backend. Redis is health-checked but is not used for task caching. The task list is unpaginated, so use the bounded, read-only tests in [Performance Testing](docs/performance-testing.md) when measuring this development setup.
+
+With Docker Desktop and the existing stack running, run the low-traffic k6 smoke profile from PowerShell:
+
+```powershell
+$scripts = (Resolve-Path .\tests\performance).Path
+docker run --rm --network taskflow_default --mount "type=bind,source=$scripts,target=/scripts,readonly" -e TASKFLOW_BASE_URL=http://backend:5000/api -e TEST_PROFILE=smoke grafana/k6:latest run /scripts/taskflow.js
+```
+
+Run a bounded load profile (5 VUs maximum by default):
+
+```powershell
+docker run --rm --network taskflow_default --mount "type=bind,source=$scripts,target=/scripts,readonly" -e TASKFLOW_BASE_URL=http://backend:5000/api -e TEST_PROFILE=load -e MAX_VUS=5 -e STEP_DURATION=10s grafana/k6:latest run /scripts/taskflow.js
+```
+
+The optional horizontal-scaling setup uses a separate Compose project and MongoDB volume, leaving the default development project separate:
+
+```powershell
+docker compose -p taskflow-scale -f docker-compose.yml -f docker-compose.scaling.yml up -d --build --scale backend=2 mongodb redis backend load-balancer
+.\tests\scaling\verify-horizontal-scaling.ps1
+```
+
+See [Horizontal Scaling](docs/horizontal-scaling.md) for safe failure checks and stop instructions. Do not use `down -v` if you need to preserve database data.
+
+**Verification status (2026-10-23):** 13 backend tests and 24 frontend tests passed; the frontend production build and both Compose configuration checks passed. Docker Hub DNS prevented downloading k6 and Nginx, so k6 load results and runtime scaling verification are still pending. The detailed findings and actual read-only API sample are in the [performance report](docs/performance-report.md).
 
 ## Implemented and deferred
 
@@ -74,4 +100,4 @@ Read-only performance testing with Grafana k6 and isolated horizontal-scaling in
 - Redis is included as an optional service and reported in health output; Redis caching and invalidation are deferred.
 - The default Compose stack uses Vite as its proxy and one backend. An optional isolated Nginx scaling project is documented for local experiments; multi-instance behavior has not yet been verified in this environment. Production deployment, authentication, pagination, and end-to-end browser testing remain future work.
 
-The eight design documents in `docs/` describe the requirements, architecture, data model, API, UI, implementation plan, and test plan.
+The design documents in `docs/` describe the requirements, architecture, data model, API, UI, implementation plan, testing, performance, and horizontal scaling.
