@@ -10,7 +10,7 @@ async function startServer() {
   const host = process.env.HOST || "0.0.0.0";
 
   await connectDatabase();
-  await connectRedis();
+  void connectRedis().catch(() => {});
 
   const server = http.createServer(app);
   await new Promise((resolve, reject) => {

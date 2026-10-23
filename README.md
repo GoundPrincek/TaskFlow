@@ -46,7 +46,8 @@ The base path is `/api`. Main endpoints are:
 - `GET /api/health`, `/api/health/live`, and `/api/health/ready`
 - `GET /api/tasks` with optional `status`, `priority`, and title `search` filters
 - `GET /api/tasks/stats`
-- `GET`, `POST`, `PATCH`, and `DELETE /api/tasks/:id` (collection `GET` and `POST` use `/api/tasks`)
+- `POST /api/tasks` and `GET /api/tasks/:id`
+- `PATCH /api/tasks/:id` and `DELETE /api/tasks/:id`
 
 Successful responses use `{ success, message, data }`; errors use `{ success: false, message, errors? }`. Pagination is not enabled, and unsupported query parameters are rejected. Deletion is permanent. The app has no authentication or multi-user ownership; treat it as a trusted single-user development app.
 

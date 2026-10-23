@@ -48,6 +48,12 @@ describe("task utilities", () => {
     ).toBe(false);
   });
 
+  it("uses UTC calendar days for overdue calculations", () => {
+    const afterUtcMidnight = new Date("2026-10-22T23:30:00-02:00");
+    expect(isTaskOverdue({ status: "todo", dueDate: "2026-10-22" }, afterUtcMidnight)).toBe(true);
+    expect(isTaskOverdue({ status: "todo", dueDate: "2026-10-23" }, afterUtcMidnight)).toBe(false);
+  });
+
   it("combines title search, status, and priority filters", () => {
     const tasks = [
       {
